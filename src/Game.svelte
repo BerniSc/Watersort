@@ -12,5 +12,5 @@
 </script>  
   
 <GameFrame>  
-  <GameBoard {gameState} />  
+  <GameBoard bind:gameState={gameState} />  
 </GameFrame>  

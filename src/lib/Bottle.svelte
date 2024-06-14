@@ -1,6 +1,12 @@
 <script>  
     import WaterLevel from './WaterLevel.svelte';  
+
+    import { createEventDispatcher } from 'svelte';
+    const dispatch = createEventDispatcher();
+
     export let bottle;  
+    
+    export let selected = false;
     
     export let id;
     export let height = 200;
@@ -9,10 +15,14 @@
     // The bottle has been clicked
     function handleClick() {  
         console.log(`Bottle ${id} was clicked`, bottle);  
+        dispatch('click');
     }  
+
+    let className = '';
+    export { className as class };
 </script>  
   
-<button class="bottle" style="height: {height}px; width: {width}px;" on:click={handleClick}>  
+<button class="bottle {className}" style="height: {height}px; width: {width}px;" on:click={handleClick} class:selected={selected}>  
     {#each bottle.levels as level, i (i)}  
         <WaterLevel color={level.color} />  
     {/each}  
@@ -32,6 +42,10 @@
         overflow: hidden;                       /* Prevents the Overflow of the Water -> Adjusts to the round Bottom instead of overflowing it */  
         cursor: pointer;                        /* Display Cursor to signal Clickable Item */  
         transition: transform 0.3s;             /* Animation to display tilting */  
+    }  
+    
+    .selected {  
+        border: 3px solid blue; 
     }  
   
     .bottle:focus {  
