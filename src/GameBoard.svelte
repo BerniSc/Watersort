@@ -6,6 +6,7 @@
 
     // Store the selected bottle index 
     let selectedBottle = null;  
+    let pouringBottle = null;  
   
     // Either choose a bottle or pour water from one bottle to another
     function selectOrPour(bottleIndex) {  
@@ -15,7 +16,17 @@
         } else {  
             // Another bottle has been selected, so we TRY to pour Water from this one to the other
             // TODO add Error Handling
-            pourWater(selectedBottle, bottleIndex);  
+
+            if(!pourWater(selectedBottle, bottleIndex)) {
+                selectedBottle = null;                      // Reset the Selection
+                return;
+            }
+
+            pouringBottle = selectedBottle; 
+            setTimeout(() => {  
+                pouringBottle = null;  
+            }, 300);                                    // Has to match the transition time of the Bottle -> TODO make shared Value
+
             selectedBottle = null;                      // Reset the Selection
         }  
     }  
@@ -49,6 +60,9 @@
             // Just Pour as many levels as possible
             levelsToPour = Math.min(levelsToPour, availableSpace);  
         
+            if(levelsToPour === 0)  
+                return false;
+
             // Refresh the State (Pour)
             if(levelsToPour > 0) {  
                 // Remove the poured levels from the 'fromBottle'
@@ -59,6 +73,8 @@
         
                 // Update the State
                 gameState = { ...gameState };           // Refresh the State per assignment
+
+                return true;
             }  
         }  
     }   
@@ -68,8 +84,11 @@
   
 <div class="game-board">  
     {#each gameState.bottles as bottle, bottleIndex (bottleIndex)}  
-        <div class="bottle">  
-            <Bottle {bottle} id={bottleIndex} on:click={() => selectOrPour(bottleIndex)} selected={bottleIndex === selectedBottle} />  
+        <div class={'bottle'}>  
+            <Bottle {bottle} id={bottleIndex} 
+                    on:click={() => selectOrPour(bottleIndex)} 
+                    selected={bottleIndex === selectedBottle} 
+                    pouring={bottleIndex === pouringBottle} />  
         </div>
     {/each}  
 </div>  
@@ -79,5 +98,4 @@
         display: inline-block;
         margin: 10px;
     }
-    
 </style>

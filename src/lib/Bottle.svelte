@@ -7,6 +7,7 @@
     export let bottle;  
     
     export let selected = false;
+    export let pouring = false; 
     
     export let id;
     export let height = 200;
@@ -22,7 +23,7 @@
     export { className as class };
 </script>  
   
-<button class="bottle {className}" style="height: {height}px; width: {width}px;" on:click={handleClick} class:selected={selected}>  
+<button class="bottle {className} {pouring ? 'pouring' : ''}" style="height: {height}px; width: {width}px;" on:click={handleClick} class:selected={selected}>  
     {#each bottle.levels as level, i (i)}  
         <WaterLevel color={level.color} />  
     {/each}  
@@ -49,11 +50,15 @@
     }  
   
     .bottle:focus {  
-    
+        /* border: 4px solid red; */
+    }  
+
+    .pouring {  
+        transform: translateY(2px); /* Style to be applied when a bottle is pouring */  
     }  
   
     .bottle:active {  
-        transform: translateY(2px);         /* Style that is beeing applied on Click*/  
+        /* transform: translateY(2px);         Style that is beeing applied on Click   */
     }  
   
     .empty-space {  
