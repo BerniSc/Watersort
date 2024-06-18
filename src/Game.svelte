@@ -88,9 +88,9 @@
         visitedStates.add(stateKey);  
     
         // Iterate over all pairs of bottles to check for possible moves  
-        for (let i = 0; i < gameState.bottles.length; i++) {  
-            for (let j = 0; j < gameState.bottles.length; j++) {  
-                if (i !== j && isValidMove(gameState.bottles[i], gameState.bottles[j])) {  
+        for(let i = 0; i < gameState.bottles.length; i++) {  
+            for(let j = 0; j < gameState.bottles.length; j++) {  
+                if(i !== j && isValidMove(gameState.bottles[i], gameState.bottles[j])) {  
                     // Clone the game state to avoid mutating the original state  
                     let clonedGameState = deepCloneArray(gameState);  
     
@@ -102,11 +102,11 @@
     
                     // If the new state has not been visited, or if we are not at the max depth,  
                     // we can say a valid move is possible (without being in a loop).  
-                    if (!visitedStates.has(newStateKey)) {  
+                    if(!visitedStates.has(newStateKey)) {  
                         // If we're not at maxDepth yet, we can check the next level  
-                        if (depth + 1 < maxDepth) {  
+                        if(depth + 1 < maxDepth) {  
                             // Make a recursive call to check the next level  
-                            if (canMakeMoves(clonedGameState, depth + 1, maxDepth, visitedStates)) {  
+                            if(canMakeMoves(clonedGameState, depth + 1, maxDepth, visitedStates)) {  
                                 return true;  
                             }  
                         } else {  
@@ -173,6 +173,6 @@
     }
 </script>  
   
-<GameFrame>  
+<GameFrame on:click={() => gameState = generateRandomGameState(numberOfBottles, 2)}>  
     <GameBoard bind:gameState={gameState} />  
 </GameFrame>  
