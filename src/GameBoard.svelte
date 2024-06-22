@@ -1,5 +1,11 @@
 <script>  
+    import { createEventDispatcher } from 'svelte';
+    const dispatch = createEventDispatcher();
+
     import Bottle from './lib/Bottle.svelte';  
+    
+    import { strGlassNumber } from './stores/state';
+
     export let gameState;  
 
     const spacePerBottle = 5; // Assume each bottle has a capacity of 5 levels
@@ -7,6 +13,19 @@
     // Store the selected bottle index 
     let selectedBottle = null;  
     let pouringBottle = null;  
+
+    let finishedBottles;
+    $: finishedBottles = Array($strGlassNumber).fill(false);
+
+    $: {
+        console.log("Finished Bottles", finishedBottles);
+        if(finishedBottles.filter(b => b).length === $strGlassNumber) {
+            console.log("All Bottles are finished, Dispatching so");
+            dispatch('winCurrentBoard');
+        }
+    }
+
+
   
     // Either choose a bottle or pour water from one bottle to another
     function selectOrPour(bottleIndex) {  
@@ -79,6 +98,9 @@
         }  
     }   
 
+    // TODO let this be incremented reactive by each kid thats correct -> Saves computing power
+    let numberOfCorrectBottles;
+
     $: console.log("I selected Bottle ", selectedBottle);
 </script>  
   
@@ -86,6 +108,7 @@
     {#each gameState.bottles as bottle, bottleIndex (bottleIndex)}  
         <div class={'bottle'}>  
             <Bottle {bottle} id={bottleIndex} 
+                    bind:bottleFinished={finishedBottles[bottleIndex]}
                     on:click={() => selectOrPour(bottleIndex)} 
                     selected={bottleIndex === selectedBottle} 
                     pouring={bottleIndex === pouringBottle} />  

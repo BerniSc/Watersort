@@ -1,6 +1,8 @@
 <!-- This displayes the Game, as well as Addition Game Elements -->
 <script>
-    import Modal, { getModal } from "./lib/Modal.svelte";
+    import Settings from "./Settings.svelte";
+import Modal, { getModal } from "./lib/Modal.svelte";
+    import Slider from "./lib/Slider.svelte";
 </script>
 
 
@@ -8,8 +10,11 @@
     <slot></slot>  
 </div>
 <button on:click>Restart</button>
-<button on:click={() => getModal().show()}>Show the Modal</button>
-<input type="range"  />
+<button on:click={() => getModal("settings").show()}>Settings</button>
+
+<Modal id="settings">
+    <Settings />
+</Modal>
 
 <Modal> 
     <h1>Play the Watersort Game here</h1>

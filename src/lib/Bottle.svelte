@@ -13,11 +13,16 @@
     export let height = 200;
     export let width = 50;
     
+    export let bottleFinished;
+
     // The bottle has been clicked
     function handleClick() {  
         console.log(`Bottle ${id} was clicked`, bottle);  
         dispatch('click');
     }  
+
+    // Reactive statement to update bottleFinished
+    $: bottleFinished = bottle.levels.length === 0 || (bottle.levels.length === 5 && bottle.levels.every(level => level.color === bottle.levels[0].color));
 
     let className = '';
     export { className as class };

@@ -2,6 +2,11 @@
     import GameBoard from './GameBoard.svelte';  
     import GameFrame from './GameFrame.svelte';  
 
+    import Confetti from './lib/Confetti.svelte';
+    let confettiObject;
+
+    import { strGlassNumber } from './stores/state';
+
     // Define the possible colors for the water levels.  
     const possibleColors = ['blue', 'red', 'orange', 'green', 'purple', 'yellow', 'pink', 'brown', ];  
   
@@ -150,11 +155,8 @@
         toBottle.levels.push(...pouredLevels);          // Add the poured levels to the 'toBottle'  
     }  
   
-    const numberOfBottles = 8;
-    // TODO let this be incremented reactive by each kid thats correct -> Saves computing power
-    let numberOfCorrectBottles;
 
-    let gameState = generateRandomGameState(numberOfBottles, 2);
+    let gameState = generateRandomGameState($strGlassNumber, 2);
 
     // We want a function to DeepClone an array, so that changes to it dont affect the original like in a normal Lang like C/C++ :-)
     function deepCloneArray(gameState) {  
@@ -171,8 +173,18 @@
         console.log("Is winnable ", test=canMakeMoves(gameState));
         if(!test) alert("Not Winnable");
     }
+
+    $: {
+        if($strGlassNumber)
+            gameState = generateRandomGameState($strGlassNumber, 2);
+    }
+
+    function wonCurrentBoard() {
+        confettiObject.startConfetti();
+    }
 </script>  
   
-<GameFrame on:click={() => gameState = generateRandomGameState(numberOfBottles, 2)}>  
-    <GameBoard bind:gameState={gameState} />  
+<GameFrame on:click={() => gameState = generateRandomGameState($strGlassNumber, 2)}>  
+    <GameBoard bind:gameState={gameState} on:winCurrentBoard={wonCurrentBoard} />  
+    <Confetti bind:this={confettiObject} />
 </GameFrame>  
